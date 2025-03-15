@@ -17,13 +17,15 @@ server.tool(
     prompt: z.string().describe("The prompt to generate an image for"),
     width: z.number().describe("The width of the image to generate"),
     height: z.number().describe("The height of the image to generate"),
+    numberOfImages: z.number().describe("The number of images to generate").default(1),
   },
   async (args) => {
     try {
       const { generateImage } = useTogether(process.env.TOGETHER_API_KEY!)
       const { prompt, ...rest } = args as any;
       const generatedImages = await generateImage(prompt as string, {
-        ...rest
+        ...rest,
+        n: args.numberOfImages,
       })
       if (!generatedImages || generatedImages.length === 0) {
         throw new Error("No image returned from Together")
