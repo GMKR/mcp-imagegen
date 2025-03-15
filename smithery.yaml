@@ -1,0 +1,34 @@
+# Smithery.ai configuration
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    {
+      "type": "object",
+      "properties": {
+        "togetherApiKey": {
+          "type": "string",
+          "description": "The API key for the Together AI API"
+        },
+        "togetherModel": {
+          "type": "string",
+          "description": "The model to use for the Together AI API",
+          "default": "black-forest-labs/FLUX.1-schnell-Free"
+        }
+      },
+      "required": ["togetherApiKey"]
+    }
+  commandFunction:
+    # A function that produces the CLI command to start the MCP on stdio.
+    |-
+    (config) => ({
+      "command": "npx",
+      "args": [
+        "tsx",
+        "src/index.ts"
+      ],
+      "env": {
+        "TOGETHER_API_KEY": config.togetherApiKey,
+        "TOGETHER_MODEL": config.togetherModel
+      }
+    })

@@ -6,6 +6,4 @@ RUN corepack prepare pnpm --activate
 RUN pnpm install
 COPY . .
 
-EXPOSE 3000
-
 CMD ["pnpm", "tsx", "src/index.ts"]

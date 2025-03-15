@@ -2,10 +2,6 @@
   "name": "@gmkr/mcp-imagegen",
   "version": "1.0.0",
   "description": "Image Generator MCP server",
-  "scripts": {
-    "start": "tsx src/server.ts",
-    "dev": "tsx watch src/server.ts"
-  },
   "keywords": [
     "mcp",
     "image",
