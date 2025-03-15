@@ -1,13 +1,43 @@
 # MCP Image Generator
 
-A Model Context Protocol (MCP) server for generating images using Together AI's image generation models.
+A Model Context Protocol (MCP) server for generating images using Together AI's image generation models. This MCP Server can be run locally or using an SSE endpoint. The MCP Image Generator requires a Together AI API key. You can get one by signing up at [Together AI](https://www.together.ai/).
 
-## Prerequisites
+## SSE Endpoint (Docker environment)
+
+### Clone the repository
+
+```bash
+git clone https://github.com/gmkr/mcp-imagegen.git
+cd mcp-imagegen
+```
+
+### Build and run Docker container
+
+```bash
+docker build -t mcp-imagegen .
+docker run -p 3000:3000 mcp-imagegen -e TOGETHER_API_KEY=your-together-api-key
+```
+
+### Configuring with MCP Client
+```
+{
+  "mcpServers": {
+    "imagegenerator": {
+      "url": "http://localhost:3000/sse",
+    }
+  }
+}
+```
+Adjust the `url` to the endpoint of the MCP server you want to use.
+
+## Running locally using stdio
+
+### Prerequisites
 
 - Node.js
 - Together AI API key
 
-## Installation
+### Installation
 
 1. Clone the repository:
    ```bash
@@ -19,17 +49,13 @@ A Model Context Protocol (MCP) server for generating images using Together AI's 
    ```bash
    pnpm install
    ```
-
-## Configuration
-
-The MCP Image Generator requires a Together AI API key. You can get one by signing up at [Together AI](https://www.together.ai/).
-
+### Configuration
 Create a configuration file for your MCP client. Here's an example configuration:
 
 ```json
 {
   "mcpServers": {
-    "image-generator": {
+    "imagegenerator": {
       "command": "pnpx",
       "args": [
         "-y",
@@ -58,6 +84,7 @@ Generates an image based on the provided prompt.
 - `prompt` (string): The text prompt to generate an image for
 - `width` (number, optional): The width of the image to generate (default: 512)
 - `height` (number, optional): The height of the image to generate (default: 512)
+- `numberOfImages` (number, optional): The number of images to generate (default: 1)
 
 ## Environment Variables
 
