@@ -3,8 +3,8 @@ WORKDIR /app
 RUN corepack enable
 COPY package.json pnpm-lock.yaml .
 RUN corepack prepare pnpm --activate
-COPY . .
 RUN pnpm install
+COPY . .
 
 EXPOSE 3000
 
