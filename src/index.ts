@@ -1,7 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { useTogether } from "./providers/together";
-import { z } from 'zod'
+import { handler, InputSchema } from "./utils";
 
 const server = new McpServer({
   name: "Image Generator",
@@ -13,31 +12,12 @@ server.tool(
   "Generates and returns an image based on the provided prompt" +
   "Use this tool when you need to generate an image based on a prompt" +
   "The image will be returned as a base64 encoded string",
-  {
-    prompt: z.string().describe("The prompt to generate an image for"),
-    width: z.number().describe("The width of the image to generate"),
-    height: z.number().describe("The height of the image to generate"),
-    numberOfImages: z.number().describe("The number of images to generate").default(1),
-  },
+  InputSchema,
   async (args) => {
     try {
-      const { generateImage } = useTogether(process.env.TOGETHER_API_KEY!)
-      const { prompt, ...rest } = args as any;
-      const generatedImages = await generateImage(prompt as string, {
-        ...rest,
-        n: args.numberOfImages,
-      })
-      if (!generatedImages || generatedImages.length === 0) {
-        throw new Error("No image returned from Together")
-      }
+      const content = await handler(args.prompt, args)
       return {
-        content: generatedImages.map((pc) => {
-          return {
-            type: "image",
-            data: pc.b64_json!,
-            mimeType: 'image/png',
-          }
-        }),
+        content,
         isError: false,
       }
     } catch (error) {
