@@ -14,7 +14,7 @@ cd mcp-imagegen
 ### Build and run Docker container
 
 ```bash
-docker build -t mcp-imagegen .
+docker build -f Dockerfile.server -t mcp-imagegen .
 docker run -p 3000:3000 mcp-imagegen -e TOGETHER_API_KEY=your-together-api-key
 ```
 
