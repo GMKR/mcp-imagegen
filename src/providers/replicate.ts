@@ -13,7 +13,7 @@ export const useReplicate = async () => {
       input: {
         ...params,
         prompt,
-        num_outputs: params?.numberOfImages || 2,
+        num_outputs: params?.numberOfImages,
       },
     })
     const generatedImages = output as FileOutput[]
