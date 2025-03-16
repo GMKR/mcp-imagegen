@@ -16,18 +16,28 @@ export const useReplicate = async () => {
         num_outputs: params?.numberOfImages,
       },
     })
-    const generatedImages = output as FileOutput[]
-    const outputArray: { type: string, data: string, mimeType: string }[] = []
-    for (const pc of generatedImages) {
-      const fileBlob = await pc.blob()
-      const base64 = Buffer.from(await fileBlob.arrayBuffer()).toString('base64')
-      outputArray.push({
-        type: "image",
-        data: base64,
-        mimeType: 'image/jpeg',
-      })
+    if (Array.isArray(output)) {
+      const generatedImages = output as FileOutput[]
+      const outputArray: { type: string, data: string, mimeType: string }[] = []
+      for (const pc of generatedImages) {
+        const fileBlob = await pc.blob()
+        const base64 = Buffer.from(await fileBlob.arrayBuffer()).toString('base64')
+        outputArray.push({
+          type: "image",
+          data: base64,
+          mimeType: 'image/jpeg',
+        })
+      }
+      return outputArray
     }
-    return outputArray
+    const generated = output as FileOutput
+    const fileBlob = await generated.blob()
+    const base64 = Buffer.from(await fileBlob.arrayBuffer()).toString('base64')
+    return [{
+      type: "image",
+      data: base64,
+      mimeType: 'image/jpeg',
+    }]
   }
 
   return {
