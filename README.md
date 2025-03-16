@@ -1,6 +1,7 @@
 # MCP Image Generator
 
-A Model Context Protocol (MCP) server for generating images using Together AI's image generation models. This MCP Server can be run locally or using an SSE endpoint. The MCP Image Generator requires a Together AI API key. You can get one by signing up at [Together AI](https://www.together.ai/).
+A Model Context Protocol (MCP) server for generating images using Together AI's image generation models. This MCP Server can be run locally or using an SSE endpoint. 
+The MCP Image Generator required a provider, only "Replicate" and "Together" are supported currently. You need to set the `TOGETHER_API_KEY` or `REPLICATE_API_TOKEN` environment variables. and set the `PROVIDER` environment variable to "replicate" or "together"/
 
 ## SSE Endpoint (Docker environment)
 
@@ -15,7 +16,7 @@ cd mcp-imagegen
 
 ```bash
 docker build -f Dockerfile.server -t mcp-imagegen .
-docker run -p 3000:3000 mcp-imagegen -e TOGETHER_API_KEY=your-together-api-key
+docker run -p 3000:3000 mcp-imagegen
 ```
 
 ### Configuring with MCP Client
@@ -24,18 +25,22 @@ docker run -p 3000:3000 mcp-imagegen -e TOGETHER_API_KEY=your-together-api-key
   "mcpServers": {
     "imagegenerator": {
       "url": "http://localhost:3000/sse",
+      "env": {
+        "PROVIDER": "replicate",
+        "REPLICATE_API_TOKEN": "your-replicate-api-token"
+      }
     }
   }
 }
 ```
-Adjust the `url` to the endpoint of the MCP server you want to use.
+Adjust the `url` to the endpoint of the MCP server you want to use.  `provider` can be "replicate" or "together".
 
 ## Running locally using stdio
 
 ### Prerequisites
 
 - Node.js
-- Together AI API key
+- Together AI API key or Replicate API token
 
 ### Installation
 
@@ -63,14 +68,15 @@ Create a configuration file for your MCP client. Here's an example configuration
         "/path/to/mcp-imagegen/src/index.ts"
       ],
       "env": {
-        "TOGETHER_API_KEY": "your-together-api-key"
+        "PROVIDER": "replicate",
+        "REPLICATE_API_TOKEN": "your-replicate-api-token"
       }
     }
   }
 }
 ```
 
-Replace `/path/to/mcp-imagegen` with the absolute path to your cloned repository and `your-together-api-key` with your actual Together AI API key.
+Replace `/path/to/mcp-imagegen` with the absolute path to your cloned repository and `your-replicate-api-token` with your actual Replicate API token.
 
 ## Usage
 
@@ -87,9 +93,10 @@ Generates an image based on the provided prompt.
 - `numberOfImages` (number, optional): The number of images to generate (default: 1)
 
 ## Environment Variables
-
+- `PROVIDER`: The provider to use for image generation (default: "replicate")
+- `REPLICATE_API_TOKEN`: Your Replicate API token
 - `TOGETHER_API_KEY`: Your Together AI API key
-- `TOGETHER_MODEL` (optional): The Together AI model to use for image generation (default: "black-forest-labs/FLUX.1-schnell-Free")
+- `MODEL_NAME`: The model to use for image generation (default: "black-forest-labs/flux-schnell")
 
 ## License
 

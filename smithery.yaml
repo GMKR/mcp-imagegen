@@ -6,17 +6,32 @@ startCommand:
     {
       "type": "object",
       "properties": {
+        "provider": {
+          "type": "string",
+          "description": "The provider to use for image generation (default: 'replicate')",
+          "default": "replicate"
+        },
+        "replicateApiToken": {
+          "type": "string",
+          "description": "The API token for the Replicate API"
+        },
+        "modelName": {
+          "type": "string",
+          "description": "The model to use for the Replicate API"
+        },
         "togetherApiKey": {
           "type": "string",
           "description": "The API key for the Together AI API"
-        },
-        "togetherModel": {
-          "type": "string",
-          "description": "The model to use for the Together AI API",
-          "default": "black-forest-labs/FLUX.1-schnell-Free"
         }
       },
-      "required": ["togetherApiKey"]
+      "anyOf": [
+        {
+          "required": ["replicateApiToken"]
+        },
+        {
+          "required": ["togetherApiKey"]
+        }
+      ]
     }
   commandFunction:
     # A function that produces the CLI command to start the MCP on stdio.
@@ -28,7 +43,9 @@ startCommand:
         "src/index.ts"
       ],
       "env": {
+        "PROVIDER": config.provider,
+        "REPLICATE_API_TOKEN": config.replicateApiToken,
         "TOGETHER_API_KEY": config.togetherApiKey,
-        "TOGETHER_MODEL": config.togetherModel
+        "MODEL_NAME": config.modelName
       }
     })

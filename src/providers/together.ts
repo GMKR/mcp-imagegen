@@ -1,27 +1,29 @@
 import { Together } from "together-ai";
-import { ImageCreateParams } from "together-ai/src/resources/images.js";
 
-export const useTogether = (apiKey: string) => {
+export const useTogether = () => {
   const together = new Together({
-    apiKey,
+    apiKey: process.env.TOGETHER_API_KEY!,
   });
 
-  async function generateImage(prompt: string, params?: Partial<Omit<ImageCreateParams, "prompt">>) {
+  async function generateImage(prompt: string, params?: Record<string, string | number>) {
+    const model = process.env.MODEL_NAME || "black-forest-labs/FLUX.1-schnell-Free"
     const response = await together.images.create({
-      model: process.env.TOGETHER_MODEL || "black-forest-labs/FLUX.1-schnell-Free",
-      width: 512,
-      height: 512,
-      n: 1,
-      response_format: "base64",
       ...params,
       prompt,
+      model,
+      response_format: "base64",
     });
 
-    return response.data
+    return response.data.map((pc) => {
+      return {
+        type: "image",
+        data: pc.b64_json!,
+        mimeType: 'image/jpeg',
+      }
+    }).filter((pc) => pc.data !== null && pc.data !== undefined)
   }
 
   return {
-    client: together,
     generateImage,
   }
 }

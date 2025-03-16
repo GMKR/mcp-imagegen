@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { useTogether } from './providers/together'
+import { useImageProvider } from './providers'
 
 export const InputSchema = {
   prompt: z.string().describe("The prompt to generate an image for"),
@@ -9,19 +9,14 @@ export const InputSchema = {
 }
 
 export const handler = async (prompt: string, params: Record<string, any>) => {
-  const { generateImage } = useTogether(process.env.TOGETHER_API_KEY!)
+  const provider = process.env.PROVIDER || "replicate"
+  const { generateImage } = await useImageProvider(provider)
   const generatedImages = await generateImage(prompt, {
     ...params,
     n: params.numberOfImages || undefined,
   })
   if (!generatedImages || generatedImages.length === 0) {
-    throw new Error("No image returned from Together")
+    throw new Error(`No image returned from ${provider}`)
   }
-  return generatedImages.map((pc) => {
-    return {
-      type: "image",
-      data: pc.b64_json!,
-      mimeType: 'image/jpeg',
-    }
-  })
+  return generatedImages
 }
