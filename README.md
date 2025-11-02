@@ -3,6 +3,10 @@
 A Model Context Protocol (MCP) server for generating images using Together AI's image generation models. This MCP Server can be run locally or using an SSE endpoint. 
 The MCP Image Generator required a provider, only "Replicate" and "Together" are supported currently. You need to set the `TOGETHER_API_KEY` or `REPLICATE_API_TOKEN` environment variables. and set the `PROVIDER` environment variable to "replicate" or "together"/
 
+<a href="https://glama.ai/mcp/servers/@GMKR/mcp-imagegen">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@GMKR/mcp-imagegen/badge" alt="mcp-image-generator MCP server" />
+</a>
+
 ## SSE Endpoint (Docker environment)
 
 ### Clone the repository
@@ -100,4 +104,4 @@ Generates an image based on the provided prompt.
 
 ## License
 
-MIT 
+MIT
