@@ -19,7 +19,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.7.0",
+    "@modelcontextprotocol/sdk": "^1.25.2",
     "express": "^4.21.2",
     "replicate": "^1.0.1",
     "together-ai": "^0.13.0",
